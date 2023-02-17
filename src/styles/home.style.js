@@ -4,8 +4,10 @@ const styles = StyleSheet.create({
     container:{
         backgroundColor:'#1F1F1F',
         flex:1, 
-        paddingHorizontal:16,
-        paddingTop:24
+        paddingTop:36
+    },
+    scrollViewContainer:{
+        height:'89%',
     }
 })
 
