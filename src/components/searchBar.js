@@ -2,7 +2,7 @@ import {
     Pressable, 
     Text, 
     StyleSheet, 
-    Image 
+    Image
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import Avatar from '../../assets/img/avatar.jpg'
@@ -27,18 +27,19 @@ const styles = StyleSheet.create({
         justifyContent:'space-between',
         borderRadius:50,
         paddingLeft:16,
-        paddingRight:12
+        paddingRight:12,
+        marginHorizontal:16
         
     },
     appname:{
         color:'#FBFBFB',
-        fontFamily:'Euclid-Regular',
+        fontFamily:'Euclid-Medium',
         fontSize:20
     },
     avatar:{
         width:30,
         height:30,
-        borderRadius:'50%'
+        borderRadius:200/2
     }
 
 })

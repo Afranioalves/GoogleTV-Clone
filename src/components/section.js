@@ -20,12 +20,14 @@ const Section = ({title, children}) =>{
 
 const styles = StyleSheet.create({
     container:{
-        marginTop:40
+        marginTop:40,
+        paddingLeft:16,
     },
     box_title:{
         display:'flex',
         flexDirection:'row',
-        justifyContent:'space-between' 
+        justifyContent:'space-between',
+        paddingRight:16
     },
     title:{
         color:"#FBFBFB",
