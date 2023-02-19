@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
-import {View, Text, ScrollView, StyleSheet} from 'react-native'
+import {View, Text, ScrollView, StyleSheet, Animated} from 'react-native'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar';
@@ -20,11 +20,12 @@ import { MovieRender } from '../renders';
 import * as NavigationBar from 'expo-navigation-bar';
 import Menu from '../components/menu';
 import TvControl from '../components/tvControl';
+//import Animated from 'react-native-reanimated'
 
 SplashScreen.preventAutoHideAsync();
 
-const Home = ()=>{
-  const visibility = NavigationBar.useVisibility()
+const Home = (props)=>{
+  const {navigate} = props.navigation
   NavigationBar.setBackgroundColorAsync("#303030");
 
     const [movies, setMovies] = useState({
@@ -38,6 +39,9 @@ const Home = ()=>{
     const [popularMovie, setPopularMovie] = useState([]);
     const [newMovie, setNewMovie] = useState([]);
     const [suggestionMovie, setSuggestionMovie] = useState([]);
+
+    const scrollY = new Animated.Value(0)
+    const [offest, setOffset] = useState(scrollY);
 
     const [error, setError] = useState([]);
 
@@ -71,6 +75,15 @@ const Home = ()=>{
     
     },[])*/
 
+
+    const handleScroll = (event)=>{
+      const {contentOffset} = event;
+      //const value = ((layoutMeasurement.height+ contentOffset.y) / contentSize.height) * 100;
+     // console.log(`${value.toFixed(0)}%`);
+     scrollY.setValue(contentOffset.y)
+   
+    }
+
   
    
     const [fontsLoaded] = useFonts({
@@ -91,53 +104,61 @@ const Home = ()=>{
 
     return(
         <View onLayout={onLayoutRootView} style={styles.container}>
-            <View style={styles.scrollViewContainer}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <SearchBar />
-              <Section title="Principais sugestões para si">
+           
+            <SearchBar scrollY={scrollY}/>
+            
+            <Animated.View style={[styles.scrollViewContainer]}>
+            <Animated.ScrollView
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16} 
+            onScroll={(e)=> handleScroll(e.nativeEvent)}
+            >
+             
+              <Section title="Principais sugestões para si" navigate={()=>navigate('List',{option:{title:'Principais sugestões para si'}})}>
                   <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
                   <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
                   <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
                   <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
               </Section>
 
-              <Section title="Filmes populares">
+              <Section title="Filmes populares" navigate={()=>navigate('List',{option:{title:'Filmes populares'}})}>
                   <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
                   <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
                   <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
                   <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
               </Section>
 
-              <Section title="Filmes novos">
+              <Section title="Filmes novos"  navigate={()=>navigate('List',{option:{title:'Filmes novos'}})}>
                   <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
                   <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
                   <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
                   <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
               </Section>
 
-              <Section title="Filmes mais vendidos">
+              <Section title="Filmes mais vendidos"  navigate={()=>navigate('List',{option:{title:'Filmes mais vendidos'}})}>
                   <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
                   <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
                   <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
                   <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
               </Section>
 
-              <Section title="Filmes de aluguer">
+              <Section title="Filmes de aluguer"  navigate={()=>navigate('List',{option:{title:'Filmes de aluguer'}})}>
                   <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
                   <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
                   <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
                   <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
               </Section>
 
-              <Section title="Filmes de ação e aventura">
+              <Section title="Filmes de ação e aventura"  navigate={()=>navigate('List',{option:{title:'Filmes de ação e aventura'}})}>
                   <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
                   <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
                   <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
                   <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
               </Section>
-            </ScrollView>
-            </View>
-            <TvControl />
+            </Animated.ScrollView>
+            </Animated.View>
+            <TvControl value={100}/>
             <Menu page='Home'/>
             <StatusBar  style='light' />
         </View>
