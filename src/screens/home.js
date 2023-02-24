@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react';
-import {View, Text, ScrollView, StyleSheet, Animated} from 'react-native'
+import {View, Text, ScrollView, Animated} from 'react-native'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar';
@@ -7,26 +7,21 @@ import styles from '../styles/home.style';
 import SearchBar from '../components/searchBar';
 import Section from '../components/section';
 import Movie from '../components/movie';
-import Aquaman from '../../assets/img/aquaman.jpg'
-import Venom from '../../assets/img/venom.jpg'
-import Adam from '../../assets/img/adam_black.jpg'
-import Panther from '../../assets/img/panther.jpg'
-import Player from '../../assets/img/player.jpg'
-import Transformer from '../../assets/img/Transformers.jpg'
-import Bumbeblee from '../../assets/img/bumble.jpg'
-import Spider from '../../assets/img/spider.jpg'
+
 import {BASE_API, BASE_IMG} from '../config/api';
-import { MovieRender } from '../renders';
+import { MovieRender, MovieRenderLocal } from '../renders';
 import * as NavigationBar from 'expo-navigation-bar';
 import Menu from '../components/menu';
 import TvControl from '../components/tvControl';
-//import Animated from 'react-native-reanimated'
+import { films } from '../data/movies';
+import Loading from '../components/loading';
 
 SplashScreen.preventAutoHideAsync();
 
 const Home = (props)=>{
   const {navigate} = props.navigation
   NavigationBar.setBackgroundColorAsync("#303030");
+  const [loading, setLoading] = useState(false)
 
     const [movies, setMovies] = useState({
       popular: [],
@@ -39,12 +34,12 @@ const Home = (props)=>{
     const [popularMovie, setPopularMovie] = useState([]);
     const [newMovie, setNewMovie] = useState([]);
     const [suggestionMovie, setSuggestionMovie] = useState([]);
+    const [bestSellerMovie, setBestSellerMovie] = useState([]);
+    const [rentalMovie, setRentalMovie] = useState([]);
+    const [adventureMovie, setAdventureMovie] = useState([]);
 
     const scrollY = new Animated.Value(0)
-    const [offest, setOffset] = useState(scrollY);
-
-    const [error, setError] = useState([]);
-
+    
     const request = async (type, page) =>{
       const response =  await fetch(BASE_API(type, page));
       return await response.json();
@@ -54,26 +49,40 @@ const Home = (props)=>{
 
     const getNewMovies = async (type, page) =>{
       const result = await request(type, page)
-      setPopularMovie(result.results)
+      setNewMovie(result.results)
     }
 
     const getPopularMovies = async (type, page) =>{
       const result = await request(type, page)
-      setNewMovie(result.results)
+      setPopularMovie(result.results)
     }
 
     const getSuggestionMovies = async (type, page) =>{
       const result = await request(type, page)
       setSuggestionMovie(result.results)
     }
+    const getBestSellerMovies = async (type, page) =>{
+      const result = await request(type, page)
+      setBestSellerMovie(result.results)
+    }
+    const getRentalMovies = async (type, page) =>{
+      const result = await request(type, page)
+      setRentalMovie(result.results)
+    }
+    const getAdventureMovies = async (type, page) =>{
+      const result = await request(type, page)
+      setAdventureMovie(result.results)
+    }
 
-   /* useEffect(()=>{
-      getNewMovies('upcoming', 1)
-      getPopularMovies('popular', 2)
+   useEffect(()=>{
+      getNewMovies('upcoming', 2)
+      getPopularMovies('popular', 3)
       getSuggestionMovies('now_playing', 1)
-      NavigationBar.setVisibilityAsync("hidden");
+      getBestSellerMovies('top_rated', 1)
+      getRentalMovies('top_rated', 2)
+      getAdventureMovies('now_playing', 3)
     
-    },[])*/
+    },[])
 
 
     const handleScroll = (event)=>{
@@ -103,10 +112,11 @@ const Home = (props)=>{
       }
 
     return(
+        
         <View onLayout={onLayoutRootView} style={styles.container}>
            
-            <SearchBar scrollY={scrollY}/>
-            
+            <SearchBar scrollY={scrollY} navigate={navigate} screen='Home'/>
+         
             <Animated.View style={[styles.scrollViewContainer]}>
             <Animated.ScrollView
             bounces={false}
@@ -115,51 +125,58 @@ const Home = (props)=>{
             onScroll={(e)=> handleScroll(e.nativeEvent)}
             >
              
-              <Section title="Principais sugestões para si" navigate={()=>navigate('List',{option:{title:'Principais sugestões para si'}})}>
-                  <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
-                  <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
-                  <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
-                  <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
+             {
+              suggestionMovie.length == 0 ? <Loading />:
+              <Section title="Principais sugestões para si" 
+                navigate={()=>navigate('List',{option:{title:'Principais sugestões para si', type:'now_playing'}})}>
+                  {MovieRender(suggestionMovie, navigate)}
               </Section>
+              }
 
-              <Section title="Filmes populares" navigate={()=>navigate('List',{option:{title:'Filmes populares'}})}>
-                  <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
-                  <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
-                  <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
-                  <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
+              {
+              popularMovie.length == 0 ? <Loading />:
+              <Section title="Filmes populares" 
+              navigate={()=>navigate('List',{option:{title:'Filmes populares', type:'popular'}})}>
+                  {MovieRender(popularMovie, navigate)}
               </Section>
+              }
 
-              <Section title="Filmes novos"  navigate={()=>navigate('List',{option:{title:'Filmes novos'}})}>
-                  <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
-                  <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
-                  <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
-                  <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
-              </Section>
+              {
+                newMovie.length == 0 ? <Loading />:
+                <Section title="Filmes novos"  
+                navigate={()=>navigate('List',{option:{title:'Filmes novos', type:'upcoming'}})}>
+                    {MovieRender(newMovie, navigate)}
+                </Section>
+              }
 
-              <Section title="Filmes mais vendidos"  navigate={()=>navigate('List',{option:{title:'Filmes mais vendidos'}})}>
-                  <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
-                  <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
-                  <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
-                  <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
-              </Section>
+              {
+               bestSellerMovie.length == 0 ? <Loading />:
+                <Section title="Filmes mais vendidos"  
+                  navigate={()=>navigate('List',{option:{title:'Filmes mais vendidos', type:'top_rated'}})}>
+                    {MovieRender(bestSellerMovie, navigate)}
+                </Section>
+              }
 
-              <Section title="Filmes de aluguer"  navigate={()=>navigate('List',{option:{title:'Filmes de aluguer'}})}>
-                  <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
-                  <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
-                  <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
-                  <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
+              {
+                rentalMovie.length == 0 ? <Loading />:
+              <Section title="Filmes de aluguer"  
+              navigate={()=>navigate('List',{option:{title:'Filmes de aluguer', type:'top_rated'}})}>
+                  {MovieRender(rentalMovie, navigate)}
               </Section>
+              }
 
-              <Section title="Filmes de ação e aventura"  navigate={()=>navigate('List',{option:{title:'Filmes de ação e aventura'}})}>
-                  <Movie poster={Spider} price='1 800,00 kz' count={45567} vote={7.5}/>
-                  <Movie poster={Bumbeblee} price='3 456,00 kz' count={567} vote={5.5}/>
-                  <Movie poster={Spider} price='1 800,00 kz' count={457} vote={6.5}/>
-                  <Movie poster={Adam} price='3 456,00 kz' count={4667} vote={7.5}/>
+              {
+                adventureMovie.length == 0 ? <Loading />:
+              <Section title="Filmes de ação e aventura"  
+              navigate={()=>navigate('List',{option:{title:'Filmes de ação e aventura', type:'now_playing'}})}>
+                  {MovieRender(adventureMovie, navigate)}
               </Section>
+              }
             </Animated.ScrollView>
             </Animated.View>
+          
             <TvControl value={100}/>
-            <Menu page='Home'/>
+            <Menu page='Home'  navigate={navigate}/>
             <StatusBar  style='light' />
         </View>
     )
