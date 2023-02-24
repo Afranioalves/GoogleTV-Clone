@@ -1,13 +1,13 @@
-import {View, ScrollView, Text, StyleSheet} from 'react-native'
+import {View, ScrollView, Text, StyleSheet, Pressable} from 'react-native'
 import { Entypo } from '@expo/vector-icons';
 
-const Section = ({title, children}) =>{
+const Section = ({title, navigate ,icon,children}) =>{
     return(
         <View style={styles.container}>
-            <View style={styles.box_title}>
+            <Pressable style={styles.box_title} onPress={()=>navigate()}>
                 <Text style={styles.title}>{title}</Text>
-                <Entypo name="chevron-right" size={24} color="#fbfbfb" />
-            </View>
+                {!icon?<Entypo name="chevron-right" size={24} color="#fbfbfb" />:null}
+            </Pressable>
             <View style={styles.content}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     {children}
@@ -20,7 +20,7 @@ const Section = ({title, children}) =>{
 
 const styles = StyleSheet.create({
     container:{
-        marginTop:40,
+        marginBottom:40,
         paddingLeft:16,
     },
     box_title:{
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     },
     title:{
         color:"#FBFBFB",
-        fontFamily:'Euclid-Regular',
+        fontFamily:'Euclid-Medium',
         fontSize:16
     },
     content:{

@@ -1,12 +1,13 @@
-import {View, Text, StyleSheet, Image} from 'react-native'
+import {View, Text, StyleSheet, Image, Pressable} from 'react-native'
 import tomato from '../../assets/img/tomato.png'
 import rotten from '../../assets/img/rotten.png'
 
 
-const Film = ({poster, price, count, vote, name}) =>{
+
+const Film = ({poster, price, count, vote, name, navigate, data, screen}) =>{
     return(
-        <View style={styles.container}>
-            <Image source={poster} style={[styles.poster]} resizeMode='cover'/>
+        <Pressable style={styles.container} onPress={()=>navigate('Details',{movie:data, screen})}>
+            <Image source={{uri:poster}} style={[styles.poster]} resizeMode='cover'/>
             <Text style={styles.moviename}>{name.length > 20 ? `${name.substring(0,18)}...`: name}</Text>
             <View style={styles.section_price}>
                 <Text style={styles.price}>{price}</Text>
@@ -17,7 +18,7 @@ const Film = ({poster, price, count, vote, name}) =>{
                
             </View>
            
-        </View>
+        </Pressable>
     )
 
 }

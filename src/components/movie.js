@@ -1,22 +1,23 @@
-import {View, Text, StyleSheet, Image} from 'react-native'
+import {View, Text, StyleSheet, Image, Pressable} from 'react-native'
 import tomato from '../../assets/img/tomato.png'
 import rotten from '../../assets/img/rotten.png'
 
+import {BASE_API, BASE_IMG} from '../config/api';
 
-const Movie = ({poster, price, count, vote}) =>{
+const Movie = ({poster, price, count, vote, data, screen, navigate}) =>{
     return(
-        <View>
-            <Image source={poster} style={styles.poster} resizeMode='cover'/>
+        <Pressable onPress={()=>navigate('Details',{movie:data, screen})}>
+            <Image source={{uri:`${BASE_IMG}${poster}`}} style={[styles.poster]} resizeMode='cover'/>
             <View style={styles.section_price}>
                 <Text style={styles.price}>{price}</Text>
                 <View style={styles.section_avarage}>
                     <Image source={ count % 3 == 0 ? tomato : rotten } style={styles.icon}/>
-                    <Text style={styles.price}>{vote*10}%</Text>
+                    <Text style={styles.price}>{(vote*10).toFixed(0)}%</Text>
                 </View>
                
             </View>
            
-        </View>
+        </Pressable>
     )
 
 }

@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text, Pressable } from "react-native"
 import { MaterialCommunityIcons, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-const Header = ({back, title})=>{
+const Header = ({back, title, search})=>{
     return(
         <View style={styles.container}>
             <View style={styles.container_1}>
@@ -11,7 +11,9 @@ const Header = ({back, title})=>{
                 {title != null ? <Text style={styles.title}>{title.length > 20 ? `${title.substring(0,20)}...`: title}</Text>:null }
             </View>
             <View style={styles.container_2}>
-                <MaterialIcons name="search" size={24} color="#f1f1f1" style={{marginRight:16}}/>
+                <Pressable onPress={()=>search('Search',{screen:'Home'})}>
+                    <MaterialIcons name="search" size={24} color="#f1f1f1" style={{marginRight:16}}/>
+                </Pressable>
                 <MaterialIcons name="more-vert" size={24} color="#f1f1f1" />
             </View>
             

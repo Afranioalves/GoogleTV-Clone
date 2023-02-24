@@ -1,13 +1,13 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
-import { Foundation, MaterialCommunityIcons, Feather, Octicons } from '@expo/vector-icons';
+import { Foundation, MaterialCommunityIcons, Feather, Octicons, FontAwesome } from '@expo/vector-icons';
 
 const colorText = '#1f1f1f'
 const background = '#C6C8C7'
 
-const Menu = ({page}) =>{
+const Menu = ({page, navigate}) =>{
     return(
         <View style={styles.container}>
-            <Pressable style={styles.option}>
+            <Pressable style={styles.option} onPress={()=>navigate('Home')}>
                 <View style={[styles.pageSelected,{backgroundColor:page=='Home'?background:null}]}>
                     {
                     page == 'Home' ?
@@ -15,20 +15,32 @@ const Menu = ({page}) =>{
                     <Octicons name="home" size={24} color="#C6C8C7" /> 
                    }
                 </View>
-                <Text style={[styles.page,{fontFamily:page=='Home'?'Euclid-Medium':null}]}>Página inicial</Text>
+                <Text style={[styles.page,{fontFamily:page=='Home'?'Euclid-Bold':'Euclid-Regular'}]}>Página inicial</Text>
             </Pressable>
-            <Pressable style={styles.option}>
-                 <View style={styles.pageSelected}>
-                    <MaterialCommunityIcons name="play-box-multiple-outline" size={24} color="#C6C8C7" />
+
+            <Pressable style={styles.option} onPress={()=>navigate('Libary')}>
+                <View style={[styles.pageSelected,{backgroundColor:page=='Libary'?background:null}]}>
+                    {
+                        page=='Libary' ?
+                        <MaterialCommunityIcons name="play-box-multiple" size={24} color={colorText} />:
+                        <MaterialCommunityIcons name="play-box-multiple-outline" size={24} color="#C6C8C7" />
+                    }
+                   
                  </View>
-                <Text style={styles.page}>Biblioteca</Text>
+                <Text style={[styles.page,{fontFamily:page=='Libary'?'Euclid-Bold':'Euclid-Regular'}]}>Biblioteca</Text>
             </Pressable>
-            <Pressable style={styles.option}>
-                <View style={styles.pageSelected}>
+
+            <Pressable style={styles.option} onPress={()=>navigate('ListView')}>
+                <View style={[styles.pageSelected,{backgroundColor:page=='ListView'?background:null}]}>
+                    {
+                    page=='ListView' ?
+                    <FontAwesome name="bookmark" size={24} color={colorText} />:
                     <Feather name="bookmark" size={24} color="#C6C8C7" />
+                    }
                 </View>
                 <Text style={styles.page}>Lista de visualização</Text>
             </Pressable>
+
         </View>
     )
 }
@@ -58,7 +70,7 @@ const styles = StyleSheet.create({
         color:"#C6C8C7"
     },
     pageSelected:{
-        width:65,
+        width:70,
         height:35,
         display: 'flex',
         alignItems: 'center',
