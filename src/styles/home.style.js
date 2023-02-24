@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     },
     scrollViewContainer:{
         height:'89%',
+        paddingTop:24
     }
 })
 
