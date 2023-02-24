@@ -5,11 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#fff"
+      "image": "./assets/splash2.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#1f1f1f"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -28,7 +28,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "Esse Aplicativo precisa ter acesso ao micrifone",
+          "speechRecognitionPermission": "Esse Aplicativo precisa ter acesso ao micrifone para poder pesquisar por voz"
+        }
+      ]
+    ]
     
     
   }
