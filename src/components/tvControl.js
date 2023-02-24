@@ -1,17 +1,37 @@
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-const TvControl = () =>{
+import 
+Animated ,
+{ withTiming, useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+
+const TvControl = ({value}) =>{
+
+    const widthContent = useSharedValue(120)
+    const config = {
+        duration: 250,
+      };
+    const animatedStyle = useAnimatedStyle(()=>{
+        return{
+            width: withTiming(value > 40 ? 0 : widthContent.value, config)
+        }
+    })
+
+ 
+
     return(
         <View style={styles.container}>
-            <MaterialCommunityIcons name="remote-tv" size={26} color="#FDFCFA" style={{marginRight:12}} />
-            <Text style={styles.text}>comando de TV</Text>
+            <View style={styles.viewIcon}>
+                <MaterialCommunityIcons name="remote-tv" size={26} color="#FDFCFA" />
+            </View>
+            <Animated.View style={[styles.boxText, animatedStyle]}>
+                <Text style={styles.text}>Comando da TV</Text>
+            </Animated.View>
         </View>
     )
 }
 const styles = StyleSheet.create({
     container:{
         position:'absolute',
-        width:180,
         backgroundColor:'#414246',
         bottom:100,
         right:16,
@@ -19,12 +39,24 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         flexDirection:'row',
-        justifyContent:'center',
-        borderRadius:12
+        borderRadius:14,
+        paddingHorizontal:12,
+        
+        
     },
     text:{
         color:"#FDFCFA",
-        fontFamily:'Euclid-Medium' 
+        fontFamily:'Euclid-Medium',
+    },
+    viewIcon:{
+        width:35,
+        height:55,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems:'center'
+    },
+    boxText:{
+        overflow:'hidden',
     }
 })
 export default TvControl
