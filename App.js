@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './src/screens/home';
 import MoviesList from './src/screens/moviesList';
 import Details from './src/screens/details';
@@ -9,8 +10,8 @@ import ListView from './src/screens/listView';
 import { Provider } from './src/context/listContext';
 
 
-
 const Stack = createStackNavigator()
+const Tab = createBottomTabNavigator();
 
 const App = ()=> {
   return (

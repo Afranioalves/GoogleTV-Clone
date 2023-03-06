@@ -18,23 +18,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "requireFullScreen": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000"
       }
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       [
-        "@react-native-voice/voice",
+        "expo-screen-orientation",
         {
-          "microphonePermission": "Esse Aplicativo precisa ter acesso ao micrifone",
-          "speechRecognitionPermission": "Esse Aplicativo precisa ter acesso ao micrifone para poder pesquisar por voz"
+          "initialOrientation": "DEFAULT"
         }
       ]
     ]
