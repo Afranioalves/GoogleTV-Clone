@@ -1,2 +1,3 @@
 # GoogleTV-Clone
-it's a clone Google tv app
+## Tech usada
+`React-Native` e `Expo`
