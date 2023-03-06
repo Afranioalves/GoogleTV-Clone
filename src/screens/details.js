@@ -5,7 +5,8 @@ import {
     ScrollView, 
     ImageBackground, 
     Image, 
-    Pressable} from 'react-native'
+    Pressable,
+    Animated} from 'react-native'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar';
@@ -13,15 +14,14 @@ import styles from '../styles/details.style';
 import { Ionicons, Octicons, MaterialCommunityIcons, FontAwesome, AntDesign } from '@expo/vector-icons';
 
 import Section from '../components/section';
-import Movie from '../components/movie';
 import Cover from '../../assets/img/cover3.png'
-import Tomato from '../../assets/img/tomato.png'
 import * as NavigationBar from 'expo-navigation-bar';
 import Header from '../components/header';
 import Option from '../components/btnOptions';
 import Button from '../components/button';
 import ModalPreview from '../components/modalPreview';
 import ModalPayment from '../components/modalPayment';
+//import WatchTriller from '../components/watchTriller';
 import { Context } from '../context/listContext';
 import { search } from '../services/searchMovieInContext';
 import Loading from '../components/loading';
@@ -38,6 +38,7 @@ const Details = ({route, navigation})=>{
   const {navigate} = navigation
   const [showModalPreview, setShowModalPreview] = useState(false)
   const [showModalAddCard, setShowModalAddCard] = useState(false)
+  const [showModalWatch, setShowModalWatch] = useState(true)
   const [inContext, setInContext] = useState(undefined)
   const [similar, setSimilar] = useState([])
   const poster = {uri:BASE_IMG+movie.poster_path};
@@ -63,8 +64,20 @@ const Details = ({route, navigation})=>{
     setSimilar(result.results)
   }
  
+  const scrollY = new Animated.Value(0)
 
-  //console.log(poster)
+  const diffClamp = Animated.diffClamp(scrollY,0,40)
+    const paddingTop = diffClamp.interpolate({
+        inputRange:[0, 40],
+        outputRange:[0, 40],
+        //extrapolate:'clamp'
+    })
+
+    const handleScroll = (event)=>{
+      const {contentOffset} = event;
+      scrollY.setValue(contentOffset.y)
+    }
+
 
   const {listContext, setListContext} = useContext(Context)
 
@@ -74,7 +87,7 @@ const Details = ({route, navigation})=>{
     getSimilar()
   },[])
 
-  //console.log(similar)
+
   
   const handleAddList = () =>{
       const searchFilmInContext = search(movie.id, listContext)
@@ -83,8 +96,9 @@ const Details = ({route, navigation})=>{
       console.log('Film already exist');
   }
 
+
       
-  //console.log(listContext)
+
  
 
   NavigationBar.setBackgroundColorAsync("#1F1F1F");
@@ -107,11 +121,17 @@ const Details = ({route, navigation})=>{
       }
 
     return(
-        <View onLayout={onLayoutRootView} style={styles.container}>
-          <ScrollView>
-            <ImageBackground source={poster} style={styles.background}>
+        <Animated.View onLayout={onLayoutRootView} style={[styles.container,{paddingTop:paddingTop}]}>
+          <Animated.ScrollView
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              scrollEventThrottle={16} 
+              onScroll={(e)=> handleScroll(e.nativeEvent)}
+          >
+            <ImageBackground source={poster} style={[styles.background]}>
                   <ImageBackground source={Cover} style={styles.cover} resizeMode='cover'>
-                      <Header title={null} back={()=>navigate(screen)} search={navigate}/>
+                          <Header title={null} back={()=>navigate(screen)} search={navigate}/>
+
                       <Pressable style={styles.btn_trailer}>
                           <Ionicons name="ios-play-outline" size={18} color="#f1f1f1" />
                           <Text style={styles.text_trailer}>Trailer</Text>
@@ -224,7 +244,7 @@ const Details = ({route, navigation})=>{
                   </View>
                 </View>
               </View>
-            </ScrollView>
+            </Animated.ScrollView>
             <ModalPreview
               isOpenModal={showModalPreview}
               isCloseModal={()=>setShowModalPreview(false)}
@@ -243,8 +263,16 @@ const Details = ({route, navigation})=>{
             >
 
             </ModalPayment>
+
+           {/* <WatchTriller
+              isOpenModal={showModalWatch}
+              isCloseModal={()=>setShowModalWatch(false)}
+              moviename={movie.title}
+              poster={poster}
+            /> */}
+
             <StatusBar  style='light' />
-        </View>
+        </Animated.View>
     )
 
 }

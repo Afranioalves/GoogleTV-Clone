@@ -1,6 +1,5 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {Modal, Text, View, TouchableOpacity, StyleSheet, Image, Pressable} from 'react-native'
-import Aquaman from '../../assets/img/aquaman.jpg';
 import { MaterialIcons } from '@expo/vector-icons';
 const ModalPreview = ({isCloseModal, isOpenModal, addCard, moviename, poster}) =>{
     

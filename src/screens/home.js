@@ -6,14 +6,12 @@ import { StatusBar } from 'expo-status-bar';
 import styles from '../styles/home.style';
 import SearchBar from '../components/searchBar';
 import Section from '../components/section';
-import Movie from '../components/movie';
 
 import {BASE_API, BASE_IMG} from '../config/api';
 import { MovieRender, MovieRenderLocal } from '../renders';
 import * as NavigationBar from 'expo-navigation-bar';
 import Menu from '../components/menu';
 import TvControl from '../components/tvControl';
-import { films } from '../data/movies';
 import Loading from '../components/loading';
 
 SplashScreen.preventAutoHideAsync();
@@ -21,16 +19,7 @@ SplashScreen.preventAutoHideAsync();
 const Home = (props)=>{
   const {navigate} = props.navigation
   NavigationBar.setBackgroundColorAsync("#303030");
-  const [loading, setLoading] = useState(false)
 
-    const [movies, setMovies] = useState({
-      popular: [],
-      suggestion: [],
-      bestSeller: [],
-      rental: [],
-      adventure: [],
-      news: []
-    });
     const [popularMovie, setPopularMovie] = useState([]);
     const [newMovie, setNewMovie] = useState([]);
     const [suggestionMovie, setSuggestionMovie] = useState([]);
@@ -39,6 +28,7 @@ const Home = (props)=>{
     const [adventureMovie, setAdventureMovie] = useState([]);
 
     const scrollY = new Animated.Value(0)
+    const [value, setValue] = useState(scrollY);
     
     const request = async (type, page) =>{
       const response =  await fetch(BASE_API(type, page));
@@ -90,8 +80,11 @@ const Home = (props)=>{
       //const value = ((layoutMeasurement.height+ contentOffset.y) / contentSize.height) * 100;
      // console.log(`${value.toFixed(0)}%`);
      scrollY.setValue(contentOffset.y)
-   
     }
+   
+
+
+    
 
   
    
@@ -175,7 +168,7 @@ const Home = (props)=>{
             </Animated.ScrollView>
             </Animated.View>
           
-            <TvControl value={100}/>
+            <TvControl value={20}/>
             <Menu page='Home'  navigate={navigate}/>
             <StatusBar  style='light' />
         </View>

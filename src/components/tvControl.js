@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet} from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import 
 Animated ,
@@ -6,7 +6,7 @@ Animated ,
 
 const TvControl = ({value}) =>{
 
-    const widthContent = useSharedValue(120)
+   const widthContent = useSharedValue(120)
     const config = {
         duration: 250,
       };
@@ -15,7 +15,6 @@ const TvControl = ({value}) =>{
             width: withTiming(value > 40 ? 0 : widthContent.value, config)
         }
     })
-
  
 
     return(
